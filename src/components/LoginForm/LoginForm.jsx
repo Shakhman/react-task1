@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from "react";
-import { Input, Form, FormGroup, Label, Button } from "reactstrap";
+import { Form, Input, Button } from "element-react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
@@ -7,11 +7,14 @@ import { loginUser } from "../../redux/actions/authActions";
 import { setError } from "../../redux/actions/errorActions";
 import { setIsProcessing } from "../../redux/actions/commonActions";
 
-const FormStyle = {
+const formStyle = {
   width: "50%",
   margin: "0 auto"
 };
 
+const titleStyle = {
+  textAlign: "center"
+};
 class LoginForm extends Component {
   static propTypes = {
     loginUser: PropTypes.func.isRequired,
@@ -20,39 +23,42 @@ class LoginForm extends Component {
   };
 
   state = {
-    email: "",
-    password: ""
+    form: {
+      email: "",
+      password: ""
+    },
+    rules: {
+      email: [
+        { required: true, message: "Please input Email", trigger: "blur" },
+        {
+          type: "email",
+          message: "Please input correct email address",
+          trigger: "blur,change"
+        }
+      ],
+      password: [
+        { required: true, message: "Please input Password", trigger: "blur" }
+      ]
+    }
   };
 
-  handleChange = event => {
+  handleChange = (key, value) => {
     this.setState({
-      [event.target.name]: event.target.value
+      form: Object.assign({}, this.state.form, { [key]: value })
     });
   };
 
   handleSubmit = e => {
     e.preventDefault();
-    const { email, password } = this.state;
 
-    if (this.validate(email, password)) {
+    this.refs.form.validate(valid => {
+      if (!valid) {
+        return false;
+      }
       this.props.setIsProcessing(true);
-      this.props.loginUser({ email, password }, this.props.history);
-    }
+      this.props.loginUser({ ...this.state.form }, this.props.history);
+    });
   };
-
-  validate(email, password) {
-    if (!email) {
-      this.props.setError("Empty email input");
-      return false;
-    }
-
-    if (!password) {
-      this.props.setError("Empty password input");
-      return false;
-    }
-
-    return true;
-  }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.isAuth) {
@@ -61,42 +67,33 @@ class LoginForm extends Component {
   }
 
   render() {
-    const { email, password } = this.state;
+    const { form, rules } = this.state;
+    const { email, password } = this.state.form;
     const { isProcessing } = this.props;
 
     return (
       <Fragment>
-        <Form
-          style={FormStyle}
-          onKeyPress={e => {
-            if (e.key === "Enter") {
-              this.handleSubmit(e);
-            }
-          }}
-        >
-          <FormGroup>
-            <Label for="exampleEmail">Email</Label>
+        <h2 style={titleStyle}>Login</h2>
+        <Form ref="form" style={formStyle} model={form} rules={rules}>
+          <Form.Item label="Email" prop="email">
             <Input
               type="email"
-              name="email"
               value={email}
-              onChange={this.handleChange}
+              onChange={this.handleChange.bind(this, "email")}
               autoComplete="on"
             />
-          </FormGroup>
-          <FormGroup>
-            <Label for="exampleEmail">Password</Label>
+          </Form.Item>
+          <Form.Item label="Password" prop="password">
             <Input
               type="password"
-              name="password"
               value={password}
-              onChange={this.handleChange}
+              onChange={this.handleChange.bind(this, "password")}
               autoComplete="on"
             />
-          </FormGroup>
+          </Form.Item>
           <Button
             disabled={isProcessing}
-            color="primary"
+            type="primary"
             onClick={this.handleSubmit}
           >
             {isProcessing ? "Checking" : "Log In"}
@@ -107,12 +104,10 @@ class LoginForm extends Component {
   }
 }
 
-const mapStateToProps = ({ auth, common }) => ({
-  isAuth: auth.isAuth,
-  isProcessing: common.isProcessing
-});
-
 export default connect(
-  mapStateToProps,
+  ({ auth, common }) => ({
+    isAuth: auth.isAuth,
+    isProcessing: common.isProcessing
+  }),
   { loginUser, setError, setIsProcessing }
 )(withRouter(LoginForm));

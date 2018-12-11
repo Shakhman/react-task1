@@ -1,22 +1,28 @@
 /* eslint-disable react/jsx-no-target-blank */
 import React, { Component } from "react";
-import { ListGroup, ListGroupItem } from "reactstrap";
-import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { getProfile } from "../../redux/actions/profileActions";
+import { Card } from "element-react";
 
 const wrapStyle = {
   margin: "0 auto",
   width: "60%"
 };
 
-const listStyle = {
-  width: "20%",
-  margin: "0 auto"
+const cardStyle = {
+  margin: "25px 0"
+};
+
+const profileTitleStyle = {
+  textAlign: "center"
 };
 
 class Profile extends Component {
-  static propTypes = {
-    profile: PropTypes.object.isRequired
-  };
+  componentDidMount() {
+    if (this.props.user) {
+      this.props.getProfile(this.props.user.id);
+    }
+  }
 
   filteredSocials = social => {
     let webValue;
@@ -32,37 +38,60 @@ class Profile extends Component {
 
     return newSocialArr.map(val => {
       return (
-        <ListGroupItem key={val.link}>
+        <div className="text item" key={val.link}>
           <a href={val.link} target="_blank">
             {val.label}
           </a>
-        </ListGroupItem>
+        </div>
       );
     });
   };
 
   render() {
     const { city, languages, social } = this.props.profile;
+
     return (
-      Object.keys(this.props.profile).length !== 0 && (
+      Object.keys(this.props.profile).length > 0 && (
         <div style={wrapStyle}>
-          <div>City: {city}</div>
-          <br />
-          <div>Languages: {languages && languages.join(", ")}</div>
-          <br />
-          <div>Socials: </div>
-          <br />
-          <div>
-            {social && (
-              <ListGroup style={listStyle}>
-                {this.filteredSocials(social)}
-              </ListGroup>
-            )}
-          </div>
+          <h1 style={profileTitleStyle}>Profile</h1>
+          <Card
+            style={cardStyle}
+            className="box-card"
+            header={<h3 style={{ textAlign: "center" }}>City</h3>}
+          >
+            <div className="text item">{city}</div>
+          </Card>
+          <Card
+            style={cardStyle}
+            className="box-card"
+            header={<h3 style={{ textAlign: "center" }}>Languages</h3>}
+          >
+            {languages &&
+              languages.map((lang, k) => {
+                return (
+                  <div key={k} className="text item">
+                    {lang}
+                  </div>
+                );
+              })}
+          </Card>
+          <Card
+            style={cardStyle}
+            className="box-card"
+            header={<h3 style={{ textAlign: "center" }}>Socials</h3>}
+          >
+            {social && this.filteredSocials(social)}
+          </Card>
         </div>
       )
     );
   }
 }
 
-export default Profile;
+export default connect(
+  ({ profile, auth }) => ({
+    profile,
+    user: auth.user
+  }),
+  { getProfile }
+)(Profile);

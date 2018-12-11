@@ -3,6 +3,7 @@ import {
     LOGIN_SUCCESS,
     GET_ERRORS,
     SET_IS_PROCESSING,
+    LOGOUT_SUCCESS,
 } from './types';
 
 export const loginUser = (data, history) => dispatch => {
@@ -15,9 +16,9 @@ export const loginUser = (data, history) => dispatch => {
                     type: GET_ERRORS,
                     payload: [data.message]
                 })
-                return;
+            } else {
+                return data;
             }
-            return data;
         }).then(data => {
             dispatch({
                 type: LOGIN_SUCCESS,
@@ -32,4 +33,12 @@ export const loginUser = (data, history) => dispatch => {
                 payload: false
             })
         });
+}
+
+export const logoutUser = () => (dispatch) => {
+    dispatch({
+        type: LOGOUT_SUCCESS,
+        payload: null,
+    })
+    window.location.reload();
 }

@@ -1,20 +1,31 @@
 import React, { Component, Fragment } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import Notifications, { notify } from "react-notify-toast";
+import { Message } from "element-react";
 import { connect } from "react-redux";
-import { Progress } from "reactstrap";
+import { Loading } from "element-react";
 
 import Header from "../Header/Header";
 
-import Index from "../../routes/index/Index";
-import Login from "../../routes/login/Login";
-import News from "../../routes/news/News";
-import Profile from "../../routes/profile/Profile";
+// Pages
+import Index from "../../routes/index/IndexPage";
+import Login from "../../routes/login/LoginPage";
+import News from "../../routes/news/NewsPage";
+import Profile from "../../routes/profile/ProfilePage";
+
+import { resetErrors } from "../../redux/actions/errorActions";
 
 class Main extends Component {
   componentWillReceiveProps(nextProps) {
-    if (nextProps.errors) {
-      nextProps.errors.map(error => notify.show(error, "error"));
+    if (nextProps.errors.length > 0) {
+      nextProps.errors.map((error, k) => {
+        Message({ message: error, type: "error", showClose: true });
+      });
+    }
+  }
+
+  componentWillUpdate(prevProps) {
+    if (prevProps.errors.length > 0) {
+      this.props.resetErrors();
     }
   }
 
@@ -23,8 +34,7 @@ class Main extends Component {
     return (
       <Router>
         <Fragment>
-          <Notifications />
-          {isProcessing && <Progress animated value="100" />}
+          {isProcessing && <Loading fullscreen />}
           <Header />
           <Switch>
             <Route path="/login" component={Login} exac />
@@ -38,12 +48,10 @@ class Main extends Component {
   }
 }
 
-const mapStateToProps = ({ errors, common }) => ({
-  errors,
-  isProcessing: common.isProcessing
-});
-
 export default connect(
-  mapStateToProps,
-  null
+  ({ errors, common }) => ({
+    errors,
+    isProcessing: common.isProcessing
+  }),
+  { resetErrors }
 )(Main);

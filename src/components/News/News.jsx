@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import { connect } from "react-redux";
 import { getNews } from "../../redux/actions/newsActions";
 import NewsList from "../NewsList/NewsList";
@@ -7,30 +7,30 @@ const newsTitle = {
   textAlign: "center"
 };
 
+const newsStyle = {
+  margin: "0 auto",
+  width: "50%"
+};
 class News extends Component {
   componentDidMount() {
     this.props.getNews();
   }
+
   render() {
     const { data, count } = this.props.news;
     return (
-      <Fragment>
-        <br />
+      <div style={newsStyle}>
         <h1 style={newsTitle}>News</h1>
-        <br />
-        {data.length > 1 && <NewsList news={data} />}
-        <br />
-        <h6>Total: {count}</h6>
-      </Fragment>
+        {data.length > 0 && <NewsList news={data} />}
+        <h4>Total: {count}</h4>
+      </div>
     );
   }
 }
 
-const mapStateToProps = ({ news }) => ({
-  news
-});
-
 export default connect(
-  mapStateToProps,
+  ({ news }) => ({
+    news
+  }),
   { getNews }
 )(News);

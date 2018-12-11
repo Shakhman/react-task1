@@ -1,14 +1,17 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
+import { Layout } from "element-react";
 import Navbar from "../Navbar/Navbar";
 
-export default class Header extends Component {
+class Header extends Component {
   render() {
     return (
-      <Fragment>
+      <Layout.Row gutter="22">
         <header>
           <Navbar />
         </header>
-      </Fragment>
+      </Layout.Row>
     );
   }
 }
+
+export default Header;

@@ -6,6 +6,7 @@ import errors from './errorReducer';
 import profile from './profileReducer';
 import common from './commonReducer';
 import news from './newsReducer';
+import menu from './menuReducer';
 
 export default combineReducers({
     auth,
@@ -13,4 +14,5 @@ export default combineReducers({
     profile,
     common,
     news,
+    menu,
 })

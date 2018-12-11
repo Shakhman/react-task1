@@ -1,19 +1,26 @@
 import React, { Component } from "react";
-import NewsComponent from "../../components/News/News";
+import News from "../../components/News/News";
 import { setIsProcessing } from "../../redux/actions/commonActions";
 import { connect } from "react-redux";
+import { Layout } from "element-react";
 
-class News extends Component {
+class NewsPage extends Component {
   componentDidMount() {
     this.props.setIsProcessing(true);
   }
 
   render() {
-    return <NewsComponent />;
+    return (
+      <Layout.Row>
+        <Layout.Col>
+          <News />
+        </Layout.Col>
+      </Layout.Row>
+    );
   }
 }
 
 export default connect(
   null,
   { setIsProcessing }
-)(News);
+)(NewsPage);

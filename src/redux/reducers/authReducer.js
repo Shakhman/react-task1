@@ -2,6 +2,7 @@ import {
     LOGIN_USER,
     LOGIN_SUCCESS,
     SET_IS_AUTH,
+    LOGOUT_SUCCESS,
 } from '../actions/types';
 
 const initialState = {
@@ -23,6 +24,11 @@ export default function (state = initialState, {
             return {
                 user: payload,
                 isAuth: true
+            };
+        case LOGOUT_SUCCESS:
+            return {
+                user: payload,
+                isAuth: false
             };
         case SET_IS_AUTH:
             return {

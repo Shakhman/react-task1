@@ -8,9 +8,7 @@ class App extends Component {
     return (
       <Provider store={store}>
         <div className="App">
-          <div className="container-fluid">
-            <Main />
-          </div>
+          <Main />
         </div>
       </Provider>
     );

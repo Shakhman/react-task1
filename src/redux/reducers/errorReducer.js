@@ -1,5 +1,6 @@
 import {
     GET_ERRORS,
+    RESET_ERRORS,
 } from '../actions/types';
 
 export default function (state = [], {
@@ -8,6 +9,8 @@ export default function (state = [], {
 }) {
     switch (type) {
         case GET_ERRORS:
+            return payload
+        case RESET_ERRORS:
             return payload
         default:
             return state;

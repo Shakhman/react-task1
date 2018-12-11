@@ -1,60 +1,57 @@
-import React, { Component, Fragment } from "react";
-import { Navbar as ReactstapNavbar, Nav, Button } from "reactstrap";
+import React, { Component } from "react";
+import { Layout, Menu, Button } from "element-react";
 import Logo from "../Logo/Logo";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import NavbarItem from "../NavbarItem/NavbarItem";
+import NavbarList from "../NavbarList/NavbarList";
+import { getMenu } from "../../redux/actions/menuActions";
+import { logoutUser } from "../../redux/actions/authActions";
+import { setIsProcessing } from "../../redux/actions/commonActions";
 
 class Navbar extends Component {
-  constructor(props) {
-    super(props);
-    this.items = [
-      {
-        text: "News",
-        link: "/news",
-        order: 1,
-        isAuth: false
-      },
-      {
-        text: "Profile",
-        link: "/profile",
-        order: 2,
-        isAuth: true
-      }
-    ];
+  componentDidMount() {
+    this.props.getMenu();
   }
 
+  handleBtnClick = e => {
+    if (this.props.isAuth) {
+      e.preventDefault();
+      this.props.setIsProcessing(this);
+      this.props.logoutUser();
+    }
+  };
+
   render() {
+    const { items, isAuth } = this.props;
     return (
-      <Fragment>
-        <ReactstapNavbar color="light" light expand="md">
-          <Logo link="/" text="React Task" />
-          <Nav className="ml-auto" navbar>
-            {this.items
-              .sort((a, b) => (a.order > b.order ? 1 : -1))
-              .map(
-                ({ link, text, isAuth }, k) =>
-                  (!isAuth || isAuth === this.props.isAuth) && (
-                    <NavbarItem key={k} text={text} link={link} />
-                  )
-              )}
-            <Link to={this.props.isAuth ? "/logout" : "/login"}>
-              <Button color="primary">
-                {this.props.isAuth ? "Log Out" : "Log In"}
-              </Button>
+      <Menu className="el-menu-demo" mode="horizontal">
+        <Layout.Col span="3">
+          <Menu.Item index="">
+            <Logo link="/" text="React Task" />
+          </Menu.Item>
+        </Layout.Col>
+        <Layout.Col span="16">
+          {items.length > 0 && <NavbarList menu={items} />}
+        </Layout.Col>
+        <Layout.Col span="3">
+          <Menu.Item index="" style={{ float: "right" }}>
+            <Link
+              onClick={this.handleBtnClick}
+              to={isAuth ? "/logout" : "/login"}
+            >
+              <Button type="primary">{isAuth ? "Log Out" : "Log In"}</Button>
             </Link>
-          </Nav>
-        </ReactstapNavbar>
-      </Fragment>
+          </Menu.Item>
+        </Layout.Col>
+      </Menu>
     );
   }
 }
 
-const mapStateToProps = ({ auth }) => ({
-  isAuth: auth.isAuth
-});
-
 export default connect(
-  mapStateToProps,
-  null
+  ({ auth, menu }) => ({
+    isAuth: auth.isAuth,
+    items: menu
+  }),
+  { getMenu, logoutUser, setIsProcessing }
 )(Navbar);

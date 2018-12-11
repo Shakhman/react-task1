@@ -5,3 +5,6 @@ export const GET_PROFILE_SUCCESS = 'GET_PROFILE_SUCCESS';
 export const SET_IS_AUTH = 'SET_IS_AUTH';
 export const SET_IS_PROCESSING = 'SET_IS_PROCESSING';
 export const GET_NEWS_SUCCESS = 'GET_NEWS_SUCCESS';
+export const GET_MENU = 'GET_MENU';
+export const RESET_ERRORS = 'RESET_ERRORS';
+export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
