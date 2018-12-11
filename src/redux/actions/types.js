@@ -1,0 +1,7 @@
+export const LOGIN_USER = 'LOGIN_USER';
+export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
+export const GET_ERRORS = 'GET_ERRORS';
+export const GET_PROFILE_SUCCESS = 'GET_PROFILE_SUCCESS';
+export const SET_IS_AUTH = 'SET_IS_AUTH';
+export const SET_IS_PROCESSING = 'SET_IS_PROCESSING';
+export const GET_NEWS_SUCCESS = 'GET_NEWS_SUCCESS';
