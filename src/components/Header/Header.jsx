@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import { Layout } from "element-react";
-import Navbar from "../Navbar/Navbar";
+import NavbarContainer from "../../containers/NavbarContainer";
 
 class Header extends Component {
   render() {
     return (
       <Layout.Row gutter="22">
         <header>
-          <Navbar />
+          <NavbarContainer />
         </header>
       </Layout.Row>
     );

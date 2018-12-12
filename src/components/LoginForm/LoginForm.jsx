@@ -1,11 +1,6 @@
 import React, { Component, Fragment } from "react";
 import { Form, Input, Button } from "element-react";
 import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
-import { loginUser } from "../../redux/actions/authActions";
-import { setError } from "../../redux/actions/errorActions";
-import { setIsProcessing } from "../../redux/actions/commonActions";
 
 const formStyle = {
   width: "50%",
@@ -17,59 +12,16 @@ const titleStyle = {
 };
 class LoginForm extends Component {
   static propTypes = {
-    loginUser: PropTypes.func.isRequired,
+    handleChange: PropTypes.func.isRequired,
+    handleSubmit: PropTypes.func.isRequired,
     isProcessing: PropTypes.bool.isRequired,
-    isAuth: PropTypes.bool.isRequired
+    state: PropTypes.object.isRequired
   };
-
-  state = {
-    form: {
-      email: "",
-      password: ""
-    },
-    rules: {
-      email: [
-        { required: true, message: "Please input Email", trigger: "blur" },
-        {
-          type: "email",
-          message: "Please input correct email address",
-          trigger: "blur,change"
-        }
-      ],
-      password: [
-        { required: true, message: "Please input Password", trigger: "blur" }
-      ]
-    }
-  };
-
-  handleChange = (key, value) => {
-    this.setState({
-      form: Object.assign({}, this.state.form, { [key]: value })
-    });
-  };
-
-  handleSubmit = e => {
-    e.preventDefault();
-
-    this.refs.form.validate(valid => {
-      if (!valid) {
-        return false;
-      }
-      this.props.setIsProcessing(true);
-      this.props.loginUser({ ...this.state.form }, this.props.history);
-    });
-  };
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.isAuth) {
-      this.setState({ isProcessing: false });
-    }
-  }
 
   render() {
-    const { form, rules } = this.state;
-    const { email, password } = this.state.form;
-    const { isProcessing } = this.props;
+    const { form, rules } = this.props.state;
+    const { email, password } = this.props.state.form;
+    const { isProcessing, handleChange, handleSubmit } = this.props;
 
     return (
       <Fragment>
@@ -79,7 +31,7 @@ class LoginForm extends Component {
             <Input
               type="email"
               value={email}
-              onChange={this.handleChange.bind(this, "email")}
+              onChange={handleChange.bind(this, "email")}
               autoComplete="on"
             />
           </Form.Item>
@@ -87,15 +39,11 @@ class LoginForm extends Component {
             <Input
               type="password"
               value={password}
-              onChange={this.handleChange.bind(this, "password")}
+              onChange={handleChange.bind(this, "password")}
               autoComplete="on"
             />
           </Form.Item>
-          <Button
-            disabled={isProcessing}
-            type="primary"
-            onClick={this.handleSubmit}
-          >
+          <Button disabled={isProcessing} type="primary" onClick={handleSubmit}>
             {isProcessing ? "Checking" : "Log In"}
           </Button>
         </Form>
@@ -104,10 +52,4 @@ class LoginForm extends Component {
   }
 }
 
-export default connect(
-  ({ auth, common }) => ({
-    isAuth: auth.isAuth,
-    isProcessing: common.isProcessing
-  }),
-  { loginUser, setError, setIsProcessing }
-)(withRouter(LoginForm));
+export default LoginForm;

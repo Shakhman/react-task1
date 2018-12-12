@@ -1,13 +1,13 @@
 import React, { Component } from "react";
-import LoginForm from "../../components/LoginForm/LoginForm";
 import { Layout } from "element-react";
+import LoginFormContainer from "../../containers/LoginFormContainer";
 
 class LoginPage extends Component {
   render() {
     return (
       <Layout.Row>
         <Layout.Col>
-          <LoginForm />
+          <LoginFormContainer />
         </Layout.Col>
       </Layout.Row>
     );

@@ -7,9 +7,9 @@ const withErrors = WrappedComponent => {
   return class extends Component {
     componentWillReceiveProps(nextProps) {
       if (nextProps.errors.length > 0) {
-        nextProps.errors.map((error, k) => {
-          Message({ message: error, type: "error", showClose: true });
-        });
+        nextProps.errors.map((error, k) =>
+          Message({ message: error, type: "error", showClose: true })
+        );
       }
     }
 

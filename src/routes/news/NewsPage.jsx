@@ -1,14 +1,9 @@
 import React, { Component } from "react";
 import News from "../../components/News/News";
-import { setIsProcessing } from "../../redux/actions/commonActions";
-import { connect } from "react-redux";
 import { Layout } from "element-react";
+import withIsProcessing from "../../hocs/withIsProcessing";
 
 class NewsPage extends Component {
-  componentDidMount() {
-    this.props.setIsProcessing(true);
-  }
-
   render() {
     return (
       <Layout.Row>
@@ -20,7 +15,4 @@ class NewsPage extends Component {
   }
 }
 
-export default connect(
-  null,
-  { setIsProcessing }
-)(NewsPage);
+export default withIsProcessing(NewsPage);
